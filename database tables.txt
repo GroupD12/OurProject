@@ -1,0 +1,79 @@
+1.
+create table patient_reg(
+    pt_no int not null AUTO_INCREMENT,
+    pt_name varchar(50) not null,
+    pt_tell varchar(50) not null,
+    pt_sex  ENUM("Female", "Male") not null,
+    birth_date date not null,
+    index index_patient(pt_no),
+    constraint cons_pk_patient primary key pt_pk(pt_no)
+);
+2.
+create table Specializations(
+    sp_no int not null AUTO_INCREMENT,
+    sp_name varchar(50) not null,
+    index index_specialization(sp_no),
+    constraint cons_pk_specialization primary key sp_pk(sp_no)
+);
+3.
+create table Doctors(
+    doc_no int not null AUTO_INCREMENT,
+    sp_no int not null,
+    doc_name varchar(50) not null,
+    doc_tell varchar(50) not null,
+    doc_sex  ENUM("Female", "Male") not null,
+    doc_expr varchar(50) not null,
+    index index_doctor(doc_no),
+    constraint cons_pk_doctor primary key doc_pk(doc_no),
+    constraint cons_fk0_doctor foreign key(sp_no) references specializations(sp_no)on update cascade on delete restrict
+);
+4.
+create table Appointment(
+    app_no int not null AUTO_INCREMENT,
+    pt_no int not null,
+    doc_no int not null,
+    app_date date not null,
+    index index_appointment(app_no),
+    constraint cons_pk_appointment primary key app_pk(app_no),
+    constraint cons_fk0_appointment foreign key(doc_no) references  doctors(doc_no)on update cascade on delete restrict,
+    constraint cons_fk1_appointment foreign key(pt_no) references patient_reg(pt_no)on update cascade on delete restrict
+);
+5.
+create table Accounts(
+    acc_no int not null AUTO_INCREMENT,
+    acc_name varchar(50) not null,
+    institution varchar(50) not null,
+    balance decimal not null,
+    index index_account(acc_no),
+    constraint cons_pk_account primary key acc_pk(acc_no)
+);
+6.
+create table Receipts(
+    r_no int not null AUTO_INCREMENT,
+    pt_no int not null,
+    amount decimal not null,
+    r_date date not null,
+    description text not null,
+    index index_receipt(r_no),
+    constraint cons_pk_receipt primary key receipt_pk(r_no),
+    constraint cons_fk1_receipt foreign key(pt_no) references patient_reg(pt_no)on update cascade on delete restrict
+);
+7.
+create table Status(
+    stat_no int not null AUTO_INCREMENT,
+    stat_name varchar(50) not null,
+    index index_status(stat_no),
+    constraint cons_pk_status primary key stat_pk(stat_no)
+);
+8.
+create table approval(
+    appr_no int not null AUTO_INCREMENT,
+    stat_no int not null,
+    r_no int not null,
+    appr_date date not null,
+    description text not null,
+    index index_approval(appr_no),
+    constraint cons_pk_approval primary key app_pk(appr_no),
+    constraint cons_fk0_approval foreign key(stat_no) references  Status(stat_no)on update cascade on delete restrict,
+    constraint cons_fk1_approval foreign key(r_no) references receipts(r_no)on update cascade on delete restrict
+);
